@@ -2,7 +2,7 @@
 <svg
    version="1.1"
    viewBox="0 0 20 19.999999"
-   id="svg212"
+   id="svg45"
    sodipodi:docname="__Assets-Light-Orange.svg"
    width="20"
    height="20"
@@ -12,40 +12,41 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
-     id="namedview214"
+     id="namedview45"
      pagecolor="#ffffff"
-     bordercolor="#111111"
-     borderopacity="1"
-     inkscape:pageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="1" />
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
-     id="defs32">
+     id="defs6">
     <linearGradient
        id="linearGradient1168">
       <stop
          style="stop-opacity:.05"
          offset="0"
-         id="stop2" />
+         id="stop1" />
       <stop
          style="stop-opacity:0"
          offset="1"
-         id="stop4" />
+         id="stop2" />
     </linearGradient>
     <linearGradient
        id="linearGradient1086">
       <stop
          stop-color="#fff"
          offset="0"
-         id="stop7" />
+         id="stop3" />
       <stop
          stop-color="#fff"
          offset=".6"
-         id="stop9" />
+         id="stop4" />
       <stop
          stop-color="#bababa"
          offset="1"
-         id="stop11" />
+         id="stop5" />
     </linearGradient>
     <radialGradient
        id="radialGradient1090-7-9"
@@ -130,7 +131,7 @@
          height="31"
          fill="#ffffff"
          opacity="0.539"
-         id="rect23" />
+         id="rect5" />
     </clipPath>
     <clipPath
        id="b-8">
@@ -140,14 +141,14 @@
          width="16"
          height="16"
          opacity="0.3"
-         id="rect26" />
+         id="rect6" />
     </clipPath>
     <clipPath
        id="clipPath6191">
       <path
          d="m 9.5,194.85 v -16 h 16 v 5 h -11 v 11 z"
          style="stroke-width:30.2;stroke-linecap:round;stroke-linejoin:round"
-         id="path29" />
+         id="path6" />
     </clipPath>
   </defs>
   <g
@@ -160,12 +161,12 @@
        height="20"
        fill="#ffffff"
        stroke-width="0.71429"
-       id="rect59" />
+       id="rect14" />
     <path
        d="m 118,562.86 c -4.6944,0 -8.5,3.8056 -8.5,8.5 0,4.6945 3.8056,8.5 8.5,8.5 4.6944,0 8.5,-3.8056 8.5,-8.5 0,-4.6944 -3.8056,-8.5 -8.5,-8.5 z"
        fill="#e6e6e6"
        stroke="#dadada"
        style="fill:#e6e6e6;stroke:#d9d9d9"
-       id="path61" />
+       id="path15" />
   </g>
 </svg>

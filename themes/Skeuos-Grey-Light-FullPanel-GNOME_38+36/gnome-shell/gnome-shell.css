@@ -30,14 +30,14 @@ stage {
 
 .workspace-switcher-container, .switcher-list, .resize-popup, .osd-window {
   color: white;
-  background-color: #303340;
+  background-color: #343434;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 14px;
   padding: 12px; }
 
 .workspace-thumbnails, #dash {
   color: white;
-  background-color: rgba(48, 51, 64, 0.8);
+  background-color: rgba(52, 52, 52, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1); }
 
 .show-apps .overview-icon, .app-well-app .overview-icon,
@@ -1288,7 +1288,7 @@ StScrollBar {
 
 .window-caption {
   color: white;
-  background-color: #303340;
+  background-color: #343434;
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 6px 12px;
@@ -1348,7 +1348,7 @@ StScrollBar {
     background-color: transparent; }
 
 .search-section-content {
-  background-color: rgba(59, 63, 78, 0.8);
+  background-color: rgba(65, 65, 65, 0.8);
   border-radius: 13px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
@@ -1362,7 +1362,7 @@ StScrollBar {
   transition-duration: 200ms; }
 
 .list-search-result:active, .search-provider-icon:active, .list-search-result:checked, .search-provider-icon:checked {
-  background-color: rgba(26, 28, 35, 0.9); }
+  background-color: rgba(27, 27, 27, 0.9); }
 
 .grid-search-results {
   spacing: 36px; }
@@ -1418,7 +1418,7 @@ StScrollBar {
 .app-well-app:active .overview-icon, .app-well-app:checked .overview-icon,
 .grid-search-result:active .overview-icon,
 .grid-search-result:checked .overview-icon {
-  background-color: rgba(26, 28, 35, 0.5); }
+  background-color: rgba(27, 27, 27, 0.5); }
 
 .app-well-app .overview-icon.overview-icon-with-label,
 .grid-search-result .overview-icon.overview-icon-with-label {
@@ -1429,13 +1429,13 @@ StScrollBar {
 
 /* App Folders */
 .app-well-app.app-folder {
-  background-color: rgba(48, 51, 64, 0.2);
+  background-color: rgba(52, 52, 52, 0.2);
   border-radius: 9px; }
 
 .app-folder-dialog {
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background-color: rgba(26, 28, 35, 0.95);
+  background-color: rgba(27, 27, 27, 0.95);
   padding: 12px; }
   .app-folder-dialog .folder-name-container {
     padding: 24px 36px 0;
@@ -1532,7 +1532,7 @@ StScrollBar {
   padding: 5px 10px; }
 
 .dash-label {
-  background-color: rgba(48, 51, 64, 0.95);
+  background-color: rgba(52, 52, 52, 0.95);
   border-radius: 7px;
   border: none;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
@@ -1554,10 +1554,10 @@ StScrollBar {
   background-color: rgba(115, 118, 128, 0.85); }
 
 .show-apps:active .overview-icon, .show-apps:checked .overview-icon {
-  background-color: rgba(26, 28, 35, 0.5); }
+  background-color: rgba(27, 27, 27, 0.5); }
 
 .show-apps:focus .overview-icon, .show-apps:checked .overview-icon {
-  background-color: #1a1c23;
+  background-color: #1b1b1b;
   color: #5c616c; }
 
 /* Workspace pager */
@@ -1711,21 +1711,21 @@ StScrollBar {
     border-color: black; }
   .keyboard-key.default-key {
     color: #5c616c;
-    background-color: #1e2128;
+    background-color: #202020;
     border-color: black;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
     text-shadow: 0 1px rgba(255, 255, 255, 0.3);
     icon-shadow: 0 1px rgba(255, 255, 255, 0.3); }
     .keyboard-key.default-key:hover, .keyboard-key.default-key:checked {
       color: #5c616c;
-      background-color: #292c37;
+      background-color: #2d2d2d;
       border-color: black;
       box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.1);
       text-shadow: 0 1px rgba(255, 255, 255, 0.3);
       icon-shadow: 0 1px rgba(255, 255, 255, 0.3); }
     .keyboard-key.default-key:active {
       color: #5c616c;
-      background-color: #111217;
+      background-color: #111111;
       border-color: black;
       text-shadow: none;
       icon-shadow: none;
@@ -1759,9 +1759,9 @@ StScrollBar {
 .keyboard-subkeys {
   color: white;
   -arrow-border-radius: 10px;
-  -arrow-background-color: #303340;
+  -arrow-background-color: #343434;
   -arrow-border-width: 1px;
-  -arrow-border-color: #43495a;
+  -arrow-border-color: #4b4b4b;
   -arrow-base: 20px;
   -arrow-rise: 10px;
   -boxpointer-gap: 6px; }
@@ -1809,7 +1809,7 @@ StScrollBar {
 
 /* Looking Glass */
 #LookingGlassDialog {
-  background-color: #303340;
+  background-color: #343434;
   spacing: 6px;
   padding: 4px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -1818,7 +1818,7 @@ StScrollBar {
   #LookingGlassDialog > #Toolbar {
     border: none;
     border-radius: 5px;
-    background-color: #303340; }
+    background-color: #343434; }
   #LookingGlassDialog .labels {
     spacing: 6px; }
   #LookingGlassDialog .notebook-tab {
@@ -1843,7 +1843,7 @@ StScrollBar {
     spacing: 6px; }
 
 .lg-dialog StEntry {
-  background-color: rgba(59, 63, 78, 0.6);
+  background-color: rgba(65, 65, 65, 0.6);
   color: white;
   border-color: rgba(255, 255, 255, 0.2);
   min-height: 22px;
@@ -1887,7 +1887,7 @@ StScrollBar {
 
 .lg-extension {
   border: 1px solid #0d0d0d;
-  background-color: #3b3f4e;
+  background-color: #414141;
   border-radius: 5px;
   padding: 4px; }
 
@@ -1898,7 +1898,7 @@ StScrollBar {
   spacing: 6px; }
 
 #LookingGlassPropertyInspector {
-  background: #303340;
+  background: #343434;
   border: 1px solid black;
   border-radius: 5px;
   padding: 6px; }
@@ -2114,12 +2114,12 @@ StScrollBar {
   .unlock-dialog-notifications-container .unlock-dialog-notification-source {
     padding: 12px 6px;
     border: none;
-    background-color: rgba(48, 51, 64, 0.3);
+    background-color: rgba(52, 52, 52, 0.3);
     color: white;
     border-radius: 10px; }
     .unlock-dialog-notifications-container .notification.critical,
     .unlock-dialog-notifications-container .unlock-dialog-notification-source.critical {
-      background-color: rgba(48, 51, 64, 0.9); }
+      background-color: rgba(52, 52, 52, 0.9); }
 
 .unlock-dialog-notification-label {
   padding: 0px 0px 0px 12px; }
@@ -2127,7 +2127,7 @@ StScrollBar {
 .unlock-dialog-notification-count-text {
   weight: bold;
   padding: 0 6px;
-  color: #303340;
+  color: #343434;
   background-color: rgba(255, 255, 255, 0.3);
   border-radius: 99px;
   margin-right: 12px; }

@@ -2,7 +2,7 @@
 <svg
    version="1.1"
    viewBox="0 0 20.031719 20.025186"
-   id="svg212"
+   id="svg45"
    sodipodi:docname="__Assets-Light-Orange.svg"
    width="20.031719"
    height="20.025187"
@@ -12,40 +12,41 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <sodipodi:namedview
-     id="namedview214"
+     id="namedview45"
      pagecolor="#ffffff"
-     bordercolor="#111111"
-     borderopacity="1"
-     inkscape:pageshadow="0"
-     inkscape:pageopacity="0"
-     inkscape:pagecheckerboard="1" />
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
   <defs
-     id="defs32">
+     id="defs6">
     <linearGradient
        id="linearGradient1168">
       <stop
          style="stop-opacity:.05"
          offset="0"
-         id="stop2" />
+         id="stop1" />
       <stop
          style="stop-opacity:0"
          offset="1"
-         id="stop4" />
+         id="stop2" />
     </linearGradient>
     <linearGradient
        id="linearGradient1086">
       <stop
          stop-color="#fff"
          offset="0"
-         id="stop7" />
+         id="stop3" />
       <stop
          stop-color="#fff"
          offset=".6"
-         id="stop9" />
+         id="stop4" />
       <stop
          stop-color="#bababa"
          offset="1"
-         id="stop11" />
+         id="stop5" />
     </linearGradient>
     <radialGradient
        id="radialGradient1090-7-9"
@@ -130,7 +131,7 @@
          height="31"
          fill="#ffffff"
          opacity="0.539"
-         id="rect23" />
+         id="rect5" />
     </clipPath>
     <clipPath
        id="b-8">
@@ -140,14 +141,14 @@
          width="16"
          height="16"
          opacity="0.3"
-         id="rect26" />
+         id="rect6" />
     </clipPath>
     <clipPath
        id="clipPath6191">
       <path
          d="m 9.5,194.85 v -16 h 16 v 5 h -11 v 11 z"
          style="stroke-width:30.2;stroke-linecap:round;stroke-linejoin:round"
-         id="path29" />
+         id="path6" />
     </clipPath>
   </defs>
   <g
@@ -160,7 +161,7 @@
        height="18.917"
        fill="#ffffff"
        stroke-width="0.67561"
-       id="rect43" />
+       id="rect9" />
     <path
        d="m 51.998,562.35 c -4.959,0 -8.9852,4.0264 -8.9852,8.9852 0,4.9587 4.0261,8.9852 8.9852,8.9852 4.9591,0 8.9852,-4.0264 8.9852,-8.9852 0,-4.9587 -4.0261,-8.9852 -8.9852,-8.9852 z"
        color="#000000"
@@ -172,7 +173,7 @@
        solid-color="#000000"
        stop-color="#000000"
        style="stroke:#d9d9d9;stroke-width:0.94581"
-       id="path45" />
+       id="path10" />
     <path
        d="m 51.998,562.82 c -4.698,0 -8.5122,3.8145 -8.5122,8.5122 0,4.6977 3.8142,8.5122 8.5122,8.5122 4.698,0 8.5122,-3.8145 8.5122,-8.5122 0,-4.6977 -3.8142,-8.5122 -8.5122,-8.5122 z"
        color="#000000"
@@ -185,7 +186,7 @@
        solid-color="#000000"
        stop-color="#000000"
        style="opacity:0.2;fill:#ffffff"
-       id="path47" />
+       id="path11" />
     <path
        d="m 49.163,568.49 h 0.7091 c 0.0076,-9e-5 0.01474,-3.3e-4 0.02213,0 0.18079,0.008 0.36155,0.0912 0.4875,0.22166 l 1.6175,1.6182 1.6398,-1.6182 c 0.18835,-0.1635 0.31673,-0.2167 0.4875,-0.22166 h 0.7091 v 0.70933 c 0,0.20321 -0.0243,0.3906 -0.17727,0.53201 l -1.6175,1.6182 1.5954,1.596 c 0.13344,0.13348 0.19942,0.32165 0.19942,0.50984 v 0.70935 h -0.7091 c -0.18812,-10e-6 -0.37622,-0.066 -0.50966,-0.19951 l -1.6175,-1.6181 -1.6175,1.6181 c -0.13343,0.1335 -0.32155,0.19951 -0.50967,0.19951 h -0.7091 v -0.70935 c 0,-0.18818 0.06599,-0.37636 0.19944,-0.50984 l 1.6175,-1.596 -1.6175,-1.6182 c -0.14942,-0.13806 -0.21496,-0.33286 -0.19944,-0.53201 V 568.49 Z"
        color="#bebebe"
@@ -193,6 +194,6 @@
        fill="#fff"
        stroke-width="1.2609"
        style="fill:#ffffff"
-       id="path49" />
+       id="path12" />
   </g>
 </svg>
