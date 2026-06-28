@@ -11,10 +11,10 @@
 <!-- meaningfull constants -->
 
 <constant name="C_title_focused" value="white" />
-<constant name="C_title_unfocused" value="#8c8f94" />
+<constant name="C_title_unfocused" value="#8f8f8f" />
 
-<constant name="C_wm_bg" value="#23252e" />
-<constant name="C_wm_border" value="#23252e" />
+<constant name="C_wm_bg" value="#252525" />
+<constant name="C_wm_border" value="#252525" />
 
 <!-- geometries -->
 

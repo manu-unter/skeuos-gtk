@@ -153,7 +153,7 @@ entry.search > * {
 
 @define-color disk_space_unknown #888a85;
 @define-color disk_space_used #729fcf;
-@define-color disk_space_free #eeeeec;
+@define-color disk_space_free #eeeeee;
 
 .disk-space-display {
     border-style: solid;

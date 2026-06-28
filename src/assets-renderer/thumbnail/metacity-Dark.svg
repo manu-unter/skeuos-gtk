@@ -51,7 +51,7 @@
     <linearGradient
        id="linearGradient4916">
       <stop
-         style="stop-color:#181a1f;stop-opacity:1"
+         style="stop-color:#1a1a1a;stop-opacity:1"
          offset="0"
          id="stop2369" />
       <stop
@@ -75,11 +75,11 @@
        y2="31"
        gradientUnits="userSpaceOnUse">
       <stop
-         style="stop-color:#0f1116"
+         style="stop-color:#111111"
          offset="0"
          id="stop65" />
       <stop
-         style="stop-color:#0f1116"
+         style="stop-color:#111111"
          offset=".93333"
          id="stop67" />
       <stop
@@ -205,7 +205,7 @@
          rx="2.1166666"
          ry="2.1166666" />
       <rect
-         style="opacity:1;fill:#23252e;stroke:none;stroke-width:7.9375;stroke-linecap:round;stroke-linejoin:round;fill-opacity:1"
+         style="opacity:1;fill:#252525;stroke:none;stroke-width:7.9375;stroke-linecap:round;stroke-linejoin:round;fill-opacity:1"
          id="rect1104"
          width="42.65863"
          height="17.579035"
@@ -223,7 +223,7 @@
          y="561.35999"
          width="20"
          height="20"
-         fill="#23252e"
+         fill="#252525"
          stroke-width="0.71429"
          id="rect80" />
       <path
@@ -279,7 +279,7 @@
          y="594.35999"
          width="20"
          height="20"
-         fill="#23252e"
+         fill="#252525"
          stroke-width="0.71429"
          id="rect112" />
       <path
@@ -298,7 +298,7 @@
          d="m 19,595.86 c -4.6944,0 -8.5,3.8056 -8.5,8.5 0,4.6945 3.8056,8.5 8.5,8.5 4.6944,0 8.5,-3.8056 8.5,-8.5 0,-4.6944 -3.8056,-8.5 -8.5,-8.5 z"
          fill="url(#radialGradient1090-7)"
          stroke="#020202"
-         style="fill:#383d4b;stroke:#000000"
+         style="fill:#3d3d3d;stroke:#000000"
          id="path116" />
       <path
          d="m 19,596.36 c -4.4122,0 -8,3.5878 -8,8 0,4.4123 3.5878,8 8,8 4.4122,0 8,-3.5878 8,-8 0,-4.4122 -3.5878,-8 -8,-8 z"
@@ -322,7 +322,7 @@
          y="627.35999"
          width="20"
          height="20"
-         fill="#23252e"
+         fill="#252525"
          stroke-width="0.71429"
          id="rect140" />
       <path
@@ -341,7 +341,7 @@
          d="m 19,628.86 c -4.6944,0 -8.5,3.8056 -8.5,8.5 0,4.6945 3.8056,8.5 8.5,8.5 4.6944,0 8.5,-3.8056 8.5,-8.5 0,-4.6944 -3.8056,-8.5 -8.5,-8.5 z"
          fill="url(#radialGradient1090-7-3)"
          stroke="#020202"
-         style="fill:#383d4b;stroke:#000000"
+         style="fill:#3d3d3d;stroke:#000000"
          id="path144" />
       <path
          d="m 19,629.36 c -4.4122,0 -8,3.5878 -8,8 0,4.4123 3.5878,8 8,8 4.4122,0 8,-3.5878 8,-8 0,-4.4122 -3.5878,-8 -8,-8 z"
