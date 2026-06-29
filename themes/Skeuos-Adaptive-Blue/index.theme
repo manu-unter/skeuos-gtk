@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=X-GNOME-Metatheme
+Name=Skeuos-Adaptive-Blue
+Comment=Skeuos Adaptive Blue theme
+Encoding=UTF-8
+
+[X-GNOME-Metatheme]
+GtkTheme=Skeuos-Adaptive-Blue
+MetacityTheme=Adwaita
+IconTheme=Adwaita
+CursorTheme=Adwaita
+ButtonLayout=:minimize,maximize,close

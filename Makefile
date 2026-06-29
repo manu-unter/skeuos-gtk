@@ -10,6 +10,9 @@ all:
 build:
 	$(MAKE) -C src build
 
+build-modern-distribution:
+	$(MAKE) -C src/sass build-modern-distribution
+
 install:
 	mkdir -p $(DESTDIR)$(PREFIX)/share/themes
 	cp -a $(foreach theme,$(THEMES),themes/$(theme)) $(DESTDIR)$(PREFIX)/share/themes
@@ -66,4 +69,4 @@ generate_changelog: _get_version _get_tag
 clean:
 	-make -C src clean
 
-.PHONY: all build install uninstall _get_version _get_tag clean
+.PHONY: all build build-modern-distribution install uninstall _get_version _get_tag clean

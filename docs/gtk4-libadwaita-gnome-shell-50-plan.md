@@ -61,10 +61,11 @@ Completed in the first implementation slice:
 - Converted the GTK 4.22 modern build target to emit one adaptive `gtk4-4.22-$COLOR.css` artifact per accent. The split GTK 4.22 outputs are now behind `build-modern-gtk4-4.22-split` and should be treated as compile probes.
 - GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
 - Started the Shell 50 local tweak port with a conservative first layer for OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows.
+- Added a tracked first publication path for `Skeuos-Adaptive-Blue`. `make build-modern-distribution` builds `themes/Skeuos-Adaptive-Blue/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first and the libadwaita adaptive layer second. That concatenation order is the current GTK4/libadwaita layering model.
 
 Not done yet:
 
-- No files in `themes/` have been regenerated for this work.
+- Only `Skeuos-Adaptive-Blue` is generated for the modern adaptive publication path. The older `Skeuos-$COLOR-Light/Dark` distribution files are intentionally untouched.
 - Shell 50 local tweaks are only partially ported. Asset-backed checkboxes/toggles, window close image assets, search/dash/app-grid styling, full-panel variants, and login/lock background styling still need selector and asset validation.
 - GTK 4.22 local tweaks have not been ported.
 
