@@ -1,0 +1,8 @@
+@import '../common/_colors';
+
+$selected_text_bg_color: if($variant == 'light', transparentize($selected_bg_color, 0.7), transparentize($selected_bg_color, 0.2));
+$accent_color: $selected_bg_color;
+
+@import '../gtk4-4.22/upstream/_drawing';
+@import '../gtk4-4.22/upstream/_common';
+@import '../gtk4-4.22/upstream/_colors-public';

@@ -58,6 +58,8 @@ Completed in the first implementation slice:
 - Added isolated GTK 4.22 and GNOME Shell 50 entry scaffolds under `src/sass/modern/`.
 - Added `build-modern-gtk4-4.22`, `build-modern-gnome-shell-50`, and aggregate `build-modern` targets.
 - Direction correction: GTK4/libadwaita modern output should be adaptive through `@media (prefers-color-scheme: dark)`, not split-only. Existing split prototype files are transitional unless converted into compatibility outputs.
+- Converted the GTK 4.22 modern build target to emit one adaptive `gtk4-4.22-$COLOR.css` artifact per accent. The split GTK 4.22 outputs are now behind `build-modern-gtk4-4.22-split` and should be treated as compile probes.
+- GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
 
 Not done yet:
 
