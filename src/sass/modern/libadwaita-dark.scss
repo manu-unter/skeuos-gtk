@@ -3,7 +3,7 @@ $contrast: 'normal';
 $selected_bg_color: #2777ff !default;
 $selected_fg_color: #ffffff !default;
 
-@import '../common/_colors';
-@import 'tokens';
-@import '../libadwaita/upstream/gtk';
-@import '../libadwaita/_skeuos-colors';
+@import 'common/_colors';
+@import 'modern/tokens';
+@import 'libadwaita/upstream/gtk';
+@import 'libadwaita/_skeuos-colors';

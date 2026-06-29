@@ -1,8 +1,9 @@
 include ../Makefile.inc
 
 THEMES_DIR=../../themes/
+MODERN_BUILD_DIR=modern/build
 
-.PHONY: build clean
+.PHONY: build build-modern-libadwaita clean clean-modern
 
 build: clean
 	$(MAKE) $(TARGETS)
@@ -54,5 +55,31 @@ endef
 
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call scss_to_css,$(COLOR_VARIANT))))
 
+MODERN_LIBADWAITA_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
+	$(MODERN_BUILD_DIR)/libadwaita-light-$(COLOR).css \
+	$(MODERN_BUILD_DIR)/libadwaita-dark-$(COLOR).css)
+
+build-modern-libadwaita: $(MODERN_LIBADWAITA_TARGETS)
+
+$(MODERN_BUILD_DIR):
+	mkdir -p $@
+
+define modern_libadwaita_to_css
+$(MODERN_BUILD_DIR)/libadwaita-light-$(1).css: modern/libadwaita-light.scss | $(MODERN_BUILD_DIR)
+	sed -e '/$$$$selected_bg_color/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/$$$$selected_fg_color/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' $$< \
+	  | $$(SCSS) > $$@
+
+$(MODERN_BUILD_DIR)/libadwaita-dark-$(1).css: modern/libadwaita-dark.scss | $(MODERN_BUILD_DIR)
+	sed -e '/$$$$selected_bg_color/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/$$$$selected_fg_color/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' $$< \
+	  | $$(SCSS) > $$@
+endef
+
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_libadwaita_to_css,$(COLOR_VARIANT))))
+
 clean:
 	-rm *.css
+
+clean-modern:
+	-rm -r $(MODERN_BUILD_DIR)

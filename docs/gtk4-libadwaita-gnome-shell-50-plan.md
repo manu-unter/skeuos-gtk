@@ -36,14 +36,15 @@ Completed in the first implementation slice:
   - `src/sass/modern/libadwaita-light.scss`
   - `src/sass/modern/libadwaita-dark.scss`
 - Verified both prototype libadwaita entry points compile to full CSS. They are not wired into the legacy top-level build.
+- Added an isolated `build-modern-libadwaita` target in `src/sass/Makefile`.
+- `make -C src/sass build-modern-libadwaita` compiles all accent variants to `src/sass/modern/build/`.
+- `src/sass/modern/build/` is ignored and is not copied into `themes/`.
 
 Not done yet:
 
-- No modern target is wired into `src/sass/Makefile`.
 - No files in `themes/` have been regenerated for this work.
 - Shell 50 entry points and local Shell 50 tweaks have not been added yet.
 - GTK 4.22 entry points have not been added yet.
-- The prototype libadwaita entry points have not been integrated with color-variant generation.
 
 ## Current Repository Inventory
 
