@@ -1,0 +1,260 @@
+# GTK4, libadwaita, and GNOME Shell 50 Porting Plan
+
+This document is the handoff point for the modern GTK4/libadwaita/GNOME Shell work. Keep it current when work moves across context compactions or dedicated threads.
+
+## Scope
+
+The existing shipped theme output remains the baseline until a modern target is explicitly wired into the build. The current tree generates GTK3, GTK4 4.2-era, Cinnamon, Xfwm, Metacity, thumbnails, and GNOME Shell 38/40/42 outputs. The modern work should start beside those outputs, not by replacing them in place.
+
+The target split is:
+
+- GTK 4.22: refresh the current GTK4 track from GTK 4.2.1 to a GTK 4.22 upstream baseline.
+- libadwaita: add a libadwaita-specific stylesheet layer based on public variables, style classes, and widget partials instead of the old libhandy import.
+- GNOME Shell 50: add a separate Shell 50 Sass target. Shell CSS uses St-specific selectors and Sass mixins, so it must not be treated as GTK CSS.
+
+The current neutral color work should remain a shared palette input, but each runtime needs its own selector contract.
+
+## Current Progress
+
+Completed in the first implementation slice:
+
+- Added this plan and inventory document.
+- Added executable sync scaffolds:
+  - `src/sass/gtk4-4.22/upstream/sync.sh`
+  - `src/sass/libadwaita/upstream/sync.sh`
+  - `src/sass/gnome-shell-50/upstream/sync.sh`
+- Synced isolated upstream snapshots:
+  - GTK `4.22.4`
+  - libadwaita `1.9.2`
+  - GNOME Shell `50.2`
+- Added `curl` to `shell.nix` so upstream syncs work from the repo's direnv/Nix shell.
+- Added the first shared modern token bridge:
+  - `src/sass/modern/_tokens.scss`
+  - `src/sass/libadwaita/_skeuos-colors.scss`
+- Verified the libadwaita color bridge compiles for light and dark variants through `direnv exec . sassc`.
+- Added isolated prototype libadwaita entry points:
+  - `src/sass/modern/libadwaita-light.scss`
+  - `src/sass/modern/libadwaita-dark.scss`
+- Verified both prototype libadwaita entry points compile to full CSS. They are not wired into the legacy top-level build.
+
+Not done yet:
+
+- No modern target is wired into `src/sass/Makefile`.
+- No files in `themes/` have been regenerated for this work.
+- Shell 50 entry points and local Shell 50 tweaks have not been added yet.
+- GTK 4.22 entry points have not been added yet.
+- The prototype libadwaita entry points have not been integrated with color-variant generation.
+
+## Current Repository Inventory
+
+### Build Orchestration
+
+- `Makefile` delegates into `src/`.
+- `src/Makefile` builds all source subdirectories: `cinnamon`, `gnome-shell`, `gtk2`, `gtk3`, `metacity`, `thumbnail`, `xfwm4`, and `sass`.
+- `src/Makefile.inc` defines tools, accent variants, text colors, and unwanted variant names.
+- `src/sass/Makefile` compiles every top-level `*.scss` once per color variant by replacing `$selected_bg_color` and `$selected_fg_color`, then copies generated CSS into `themes/`.
+- `themes/` is tracked distribution output. Do not casually regenerate it while working on the modern scaffold.
+
+### Shared Tokens
+
+- `src/sass/common/_colors.scss` is the shared color source for GTK, Shell, and Cinnamon.
+- Core surface tokens already present:
+  - `$base_color`
+  - `$text_color`
+  - `$bg_color`
+  - `$fg_color`
+  - `$borders_color`
+  - `$headerbar_bg_color`
+  - `$menu_color`
+  - `$popover_bg_color`
+  - `$osd_bg_color`
+  - `$sidebar_bg_color`
+  - `$system_bg_color`
+- Accent/action tokens already present:
+  - `$selected_bg_color`
+  - `$selected_fg_color`
+  - `$suggested_bg_color`
+  - `$progress_bg_color`
+  - `$checkradio_bg_color`
+  - `$switch_bg_color`
+  - `$focus_border_color`
+- The dark base has already been neutralized to gray values. Keep future modern tokens neutral unless intentionally applying accent color.
+
+### GTK3
+
+- Entry points: `src/sass/gtk3.scss`, `src/sass/gtk3-dark.scss`.
+- Upstream snapshot: `src/sass/gtk3/upstream/sync.sh` pins GTK `3.24.30`.
+- libhandy snapshot: `src/sass/gtk3/upstream/libhandy/sync.sh` pins libhandy `1.2.3`.
+- Local tweaks: `src/sass/gtk3/_common-tweaks.scss`, `_applications.scss`, `_budgie.scss`.
+- App CSS overlays: `src/sass/gtk-applications-css/gedit`, `src/sass/gtk-applications-css/nautilus`.
+
+### Current GTK4
+
+- Entry points: `src/sass/gtk4.scss`, `src/sass/gtk4-dark.scss`.
+- Upstream snapshot: `src/sass/gtk4/upstream/sync.sh` pins GTK `4.2.1`.
+- The current GTK4 entry points import:
+  - shared colors
+  - GTK4 upstream `_drawing`
+  - GTK4 upstream `_common`
+  - GTK3 libhandy `Adwaita-base`
+  - local GTK4 tweaks
+  - app CSS overlays
+  - GTK4 upstream public colors
+- Local GTK4 tweaks already cover:
+  - buttons
+  - entries
+  - switches
+  - check/radio controls
+  - scales
+  - window controls
+  - headerbars
+  - tree views
+  - notebooks
+  - scrollbars
+  - app notifications
+  - window outlines
+  - tooltips
+- This target is useful as a visual reference, but the libhandy import is not the right basis for a modern libadwaita stylesheet.
+
+### GNOME Shell
+
+- Current Shell entry points:
+  - `gnome-shell*.scss`: Shell 42-era target
+  - `gnome-shell-40*.scss`: Shell 40/41-era target
+  - `gnome-shell-38*.scss`: Shell 38/36-era target
+  - `*-fullpanel*.scss`: full-panel variants
+- Upstream snapshots:
+  - `src/sass/gnome-shell/upstream/sync.sh` pins Shell `42.0`
+  - `src/sass/gnome-shell-40/upstream/sync.sh` pins Shell `41.0`
+  - `src/sass/gnome-shell-38/upstream/sync.sh` pins Shell `3.38.2`
+- Local Shell tweaks already cover:
+  - OSD panels and buttons
+  - switches, sliders, checkboxes
+  - popovers and menus
+  - message list and notifications
+  - window picker and close buttons
+  - workspace switcher
+  - screenshot UI
+  - top panel and activities button
+  - date/time menu
+  - search entry/results
+  - dash
+  - app grid
+  - lock screen and login dialog
+- Shell 50 changes the widget import set compared with Shell 42. It has `quick-settings` and `login-lock`, and it no longer uses some older split files such as `hotplug`, `network-dialog`, `screen-shield`, or `tiled-previews`.
+
+### Asset Renderers
+
+- GTK2/GTK3/Xfwm/Metacity/Cinnamon/Shell assets are generated separately under `src/assets-renderer/`.
+- Shell assets are color-substituted through `src/assets-renderer/gnome-shell/Makefile`.
+- Current GTK4 uses GTK/Sass styling and local assets indirectly through the upstream/tweak layers.
+- Modern libadwaita may need symbolic assets from libadwaita upstream in addition to existing Skeuos assets.
+
+## External References
+
+Use these references when updating the mapping:
+
+- GTK CSS overview: `https://docs.gtk.org/gtk4/css-overview.html`
+- GTK widget pages: each widget class page has a "CSS nodes" section, for example `GtkButton`.
+- libadwaita CSS variables: `https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/css-variables.html`
+- libadwaita style classes: `https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html`
+- GTK upstream stylesheet: `https://gitlab.gnome.org/GNOME/gtk/-/tree/main/gtk/theme/Default`
+- libadwaita upstream stylesheet: `https://gitlab.gnome.org/GNOME/libadwaita/-/tree/main/src/stylesheet`
+- GNOME Shell upstream Sass: `https://gitlab.gnome.org/GNOME/gnome-shell/-/tree/main/data/theme/gnome-shell-sass`
+
+## Target Upstream Baselines
+
+Observed on 2026-06-29:
+
+- GTK 4.22 target: use GTK `4.22.4` as the stable GTK 4.22 baseline.
+- libadwaita target: use libadwaita `1.9.2` as the current tagged baseline, unless we later choose an older stable app-runtime target.
+- GNOME Shell target: use Shell `50.2` as the Shell 50 baseline.
+
+The sync scaffolds added for this plan default to those versions but allow `VERSION=...` overrides.
+
+## Visual Intent Mapping
+
+The table maps visual intent rather than old selectors. This is the unit of work for the port.
+
+| Intent | Existing Skeuos Tokens | Current GTK3/GTK4 Coverage | Modern GTK4/libadwaita Target | Current Shell Coverage | Shell 50 Target |
+| --- | --- | --- | --- | --- | --- |
+| Window background | `$bg_color`, `$fg_color`, `$backdrop_bg_color` | `.background`, `window`, `window.background`, window outline tweaks | `--window-bg-color`, `--window-fg-color`, `.background`, window outlines | `stage`, overview/system backgrounds | `$bg_color`, `$fg_color`, `stage`, `widgets/base`, `widgets/overview` |
+| Content/view background | `$base_color`, `$text_color`, `$backdrop_base_color` | `.view`, `%view`, `textview`, `iconview`, `gridview`, `flowbox` | `--view-bg-color`, `--view-fg-color`, `.view`, `widgets/views`, text selection variables | Search/results and card-like content use shell-specific backgrounds | Keep separate: Shell has no GTK view class; map to search/results/list containers |
+| Headerbars and toolbars | `$headerbar_bg_color`, `$top_hilight`, `$borders_color` | `headerbar`, `%titlebar`, `%toolbar`, `.toolbar`, searchbar/actionbar | `--headerbar-bg-color`, `--headerbar-fg-color`, `--headerbar-border-color`, `--headerbar-shade-color`, `.toolbar`, `AdwHeaderBar`, `AdwToolbarView` | Top panel is not a GTK headerbar | Use Shell panel tokens and `widgets/panel`; do not reuse GTK headerbar selectors |
+| Sidebars | `$sidebar_bg_color`, `$backdrop_sidebar_bg_color`, `$borders_color` | GTK3 `.sidebar`, `placessidebar`, `stacksidebar`; GTK4 inherits old upstream coverage | `--sidebar-bg-color`, `--secondary-sidebar-bg-color`, `.navigation-sidebar`, `widgets/sidebars`, preferences pages | Message list and overview side areas only loosely related | Map only Shell-specific side panels if present; no GTK sidebar selectors |
+| Cards and boxed lists | `$base_color`, `$bg_color`, `$borders_color`, `$shadow_color` | Existing GTK4 has frames/lists but no modern libadwaita card contract | `--card-bg-color`, `--card-fg-color`, `--card-shade-color`, `.boxed-list`, `.boxed-list-separate`, `.card`, preferences rows | Current upstream Shell has `%card_common`, `%card`, `%card_flat` | Keep Shell card placeholders and tune to Skeuos depth/radius |
+| Dialogs | `$bg_color`, `$base_color`, `$borders_color`, `$shadow_color` | `window.dialog`, `.dialog headerbar`, print dialogs | `--dialog-bg-color`, `--dialog-fg-color`, `widgets/dialogs`, `widgets/message-dialog` | Dialogs, login/unlock dialogs | `widgets/dialogs`, `widgets/login-lock` |
+| Popovers and menus | `$menu_color`, `$menu_selected_color`, `$popover_bg_color`, `$popover_hover_color` | `popover.background`, `popover.menu`, `modelbutton`, menubar | `--popover-bg-color`, `--popover-fg-color`, `--popover-shade-color`, `widgets/popovers`, `widgets/menus` | `.popup-menu-content`, `.popup-menu-item`, `.popup-sub-menu` | `widgets/popovers`, quick settings popovers, Shell popup menu classes |
+| OSD, overlays, toasts | `$osd_bg_color`, `$osd_fg_color`, `$osd_borders_color`, `$osd_outer_borders_color` | `.osd`, app notifications, tooltip-like overlays | `.osd`, OSD buttons/toolbars/progress, libadwaita toast colors where upstream exposes them | `%osd_panel`, `%osd_button`, screenshot UI | `widgets/osd`, `widgets/screenshot`, notification OSD paths |
+| Buttons | `$dark_fill`, `$selected_bg_color`, `$selected_fg_color`, `$suggested_bg_color` | `%button`, `button`, `.flat`, `.image-button`, `.circular`, `.suggested-action`, `.destructive-action` | `widgets/buttons`, `.flat`, `.raised`, `.suggested-action`, `.destructive-action`, `.circular`, `.pill`, `.opaque` | `%button`, `%flat_button`, `%default_button`, dialog/notification/system buttons | Shell button placeholders plus quick settings buttons |
+| Entries | `$base_color`, `$borders_color`, `$focus_border_color`, `$insensitive_*` | `%entry`, `entry`, `spinbutton`, `searchentry` via upstream | `widgets/entries`, `GtkEntry`, `GtkPasswordEntry`, `GtkSearchEntry`, focus rings | `%entry`, `%system_entry`, search entry | `widgets/entries`, `widgets/search-entry`, login-lock entries |
+| Selection and focus | `$selected_bg_color`, `$selected_fg_color`, `$focus_border_color`, `$alt_focus_border_color` | `%selected_items`, text selections, focus rings | `--accent-bg-color`, `--accent-fg-color`, `--accent-color`, focus ring variables/mixins | `-st-accent-color`, `-st-accent-fg-color`, selection background in entries | Keep Shell accent variables separate from GTK variables |
+| Checkboxes and radios | `$checkradio_bg_color`, `$checkradio_fg_color`, `$checkradio_borders_color` | `check`, `radio`, `checkbutton`, GTK asset-based checks/radios | `widgets/checks`, `GtkCheckButton`, `check`, `radio`; avoid stale asset selectors if GTK changed | `.check-box` uses SVG assets | `widgets/check-box` with current Shell asset behavior |
+| Switches | `$switch_bg_color`, `$switch_borders_color`, `$borders_color` | `switch`, `switch slider` | `widgets/switch`, `GtkSwitch`, libadwaita switch rows | `.toggle-switch` uses SVG assets and size tweaks | `widgets/switches`, quick settings toggles |
+| Scales and sliders | `$progress_bg_color`, `$borders_color`, `$selected_bg_color` | `scale`, `%scale_trough`, `%scale_highlight`, `scale slider` | `widgets/scale`, `GtkScale`; verify node tree in GTK Inspector | `.slider` St barlevel properties | `widgets/slider` |
+| Progress and level bars | `$progress_bg_color`, `$warning_color`, `$success_color`, `$error_color` | `progressbar`, `levelbar` from upstream | `widgets/progress-bar`, `widgets/level-bar`, semantic colors | Mostly Shell OSD/progress widgets | Shell-specific progress selectors if present |
+| Scrollbars | `$scrollbar_*`, `$backdrop_scrollbar_*` | `scrollbar`, `scrollbar > range`, slider states | `widgets/scrolling`, `GtkScrollbar`, undershoot variables | `widgets/scrollbars` | `widgets/scrollbars` |
+| Lists and rows | `$bg_color`, `$base_color`, `$selected_bg_color` | `list`, `row`, `.rich-list`, `treeview`, `columnview` | `widgets/lists`, `widgets/column-view`, `.rich-list`, `.navigation-sidebar`, `.boxed-list` | Message list and search results | `widgets/message-list`, `widgets/search-results`, quick settings rows |
+| Tabs and notebooks | `$dark_fill`, `$bg_color`, `$borders_color` | `notebook`, tabs, `stackswitcher` | `widgets/notebook`, `widgets/tab-view`, `AdwTabView`, `AdwViewSwitcher` | Window/workspace switchers only conceptually related | Shell switcher widgets; do not reuse GTK notebook model |
+| Window controls | `$selected_bg_color`, `$bg_color`, `$alt_borders_color`, `$shadow_color` | `windowcontrols button`, `.close`, titlebutton tweaks | GTK4 `windowcontrols`; libadwaita headerbar buttons where exposed | `.window-close` in overview/window picker | `widgets/window-picker` |
+| Toolbars and linked controls | `$bg_color`, `$borders_color`, `$button_*` | `%toolbar`, `.toolbar`, `.linked` | `.toolbar`, `.linked`, `widgets/toolbars`, `widgets/linked`, `AdwSplitButton`, `AdwToggleGroup` | Shell panel/quick settings are separate | `widgets/quick-settings`, `widgets/panel` |
+| App-specific CSS | Accent and disk-space named colors | Nautilus and gedit CSS appended to GTK outputs | Reassess. Modern Nautilus/libadwaita likely needs less private CSS and more variable coverage | Not applicable | Not applicable |
+| Shell panel and overview | `$panel_bg`, `$panel_fg`, `$system_bg_color`, `$osd_*` | Not GTK | Not libadwaita | `#panel`, `.panel-button`, overview, dash, app grid | `widgets/panel`, `widgets/overview`, `widgets/dash`, `widgets/app-grid`, `widgets/quick-settings` |
+
+## Implementation Sequence
+
+1. Add isolated upstream sync scaffolds for GTK 4.22, libadwaita, and Shell 50.
+2. Fetch the upstream sources into those new directories and commit them as a reviewable snapshot.
+3. Add a modern token bridge:
+   - shared neutral Skeuos colors
+   - libadwaita public variables
+   - GTK4 Sass variables needed by GTK upstream
+   - Shell St accent variables and Shell-only system colors
+4. Build a modern GTK4/libadwaita stylesheet target without wiring it into `themes/` yet.
+5. Build a Shell 50 target without replacing Shell 42 output.
+6. Run a focused visual validation matrix.
+7. Wire generated outputs into `themes/` only after the modern outputs compile and pass screenshot review.
+
+## Validation Matrix
+
+Use both widget galleries and real apps:
+
+- `gtk4-widget-factory`
+- `adwaita-1-demo`
+- GNOME Files/Nautilus
+- GNOME Settings
+- GNOME Text Editor
+- GNOME Console
+- Loupe or another image-viewer style app with OSD controls
+- GNOME Shell overview, quick settings, notifications, lock/login screen
+
+Minimum checks per target:
+
+- light and dark variants
+- at least one saturated accent and the neutral accent
+- normal and backdrop windows
+- focused and unfocused entries/buttons
+- selected rows and text selections
+- sidebars next to views
+- popovers and dialogs
+- OSD controls
+- scrollbars, switches, checks, radios, scales, progress bars
+
+## Working Rules
+
+- Keep modern targets isolated until they are intentionally wired into `src/sass/Makefile`.
+- Prefer upstream Sass imports plus a Skeuos token/tweak layer over wholesale selector rewrites.
+- Use GTK Inspector to verify CSS node names before porting old GTK3 selectors.
+- Do not assume libadwaita internals are stable. Prefer documented variables and style classes.
+- Treat GNOME Shell as a separate St stylesheet. Share palette intent, not selectors.
+- Avoid changing tracked `themes/` output during scaffold work unless the task explicitly says to regenerate distributions.
+
+## Next Concrete Slices
+
+1. Run the new sync scripts and review fetched upstream sources.
+2. Add `src/sass/modern/_tokens.scss` or equivalent to bridge Skeuos colors into modern GTK/libadwaita/Shell variables.
+3. Create a first libadwaita variable override file and compile it standalone.
+4. Port the existing GTK4 button/entry/headerbar/card visual intent into modern partials.
+5. Create Shell 50 entry points and import Shell 50 upstream plus a minimal `_common-tweaks.scss`.
+6. Add make targets for modern outputs, still disabled from default distribution copy.
+7. Add a validation script or documented command sequence for widget factory/demo screenshots.
