@@ -1,0 +1,13 @@
+$variant: 'dark';
+$contrast: 'normal';
+$selected_bg_color: #2777ff !default;
+$selected_fg_color: #ffffff !default;
+
+@import 'gnome-shell-50/upstream/gnome-shell-sass/_colors';
+@import 'common/_colors';
+@import 'modern/tokens';
+@import 'gnome-shell-50/_colors';
+@import 'gnome-shell-50/upstream/gnome-shell-sass/_drawing';
+@import 'gnome-shell-50/upstream/gnome-shell-sass/_common';
+@import 'gnome-shell-50/upstream/gnome-shell-sass/_widgets';
+@import 'gnome-shell-50/_common-tweaks';

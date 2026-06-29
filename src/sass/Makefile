@@ -3,7 +3,7 @@ include ../Makefile.inc
 THEMES_DIR=../../themes/
 MODERN_BUILD_DIR=modern/build
 
-.PHONY: build build-modern-libadwaita clean clean-modern
+.PHONY: build build-modern build-modern-libadwaita build-modern-libadwaita-split build-modern-gtk4-4.22 build-modern-gnome-shell-50 clean clean-modern
 
 build: clean
 	$(MAKE) $(TARGETS)
@@ -56,27 +56,59 @@ endef
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call scss_to_css,$(COLOR_VARIANT))))
 
 MODERN_LIBADWAITA_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
+	$(MODERN_BUILD_DIR)/libadwaita-$(COLOR).css)
+MODERN_LIBADWAITA_SPLIT_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 	$(MODERN_BUILD_DIR)/libadwaita-light-$(COLOR).css \
 	$(MODERN_BUILD_DIR)/libadwaita-dark-$(COLOR).css)
+MODERN_GTK422_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
+	$(MODERN_BUILD_DIR)/gtk4-4.22-light-$(COLOR).css \
+	$(MODERN_BUILD_DIR)/gtk4-4.22-dark-$(COLOR).css)
+MODERN_GNOME_SHELL_50_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
+	$(MODERN_BUILD_DIR)/gnome-shell-50-light-$(COLOR).css \
+	$(MODERN_BUILD_DIR)/gnome-shell-50-dark-$(COLOR).css)
+
+build-modern: build-modern-libadwaita build-modern-gtk4-4.22 build-modern-gnome-shell-50
 
 build-modern-libadwaita: $(MODERN_LIBADWAITA_TARGETS)
+
+build-modern-libadwaita-split: $(MODERN_LIBADWAITA_SPLIT_TARGETS)
+
+build-modern-gtk4-4.22: $(MODERN_GTK422_TARGETS)
+
+build-modern-gnome-shell-50: $(MODERN_GNOME_SHELL_50_TARGETS)
 
 $(MODERN_BUILD_DIR):
 	mkdir -p $@
 
-define modern_libadwaita_to_css
-$(MODERN_BUILD_DIR)/libadwaita-light-$(1).css: modern/libadwaita-light.scss | $(MODERN_BUILD_DIR)
-	sed -e '/$$$$selected_bg_color/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
-	    -e '/$$$$selected_fg_color/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' $$< \
+define modern_pair_to_css
+$(MODERN_BUILD_DIR)/$(1)-light-$(2).css: modern/$(1)-light.scss | $(MODERN_BUILD_DIR)
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(2)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(2)) !default;' $$< \
 	  | $$(SCSS) > $$@
 
-$(MODERN_BUILD_DIR)/libadwaita-dark-$(1).css: modern/libadwaita-dark.scss | $(MODERN_BUILD_DIR)
-	sed -e '/$$$$selected_bg_color/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
-	    -e '/$$$$selected_fg_color/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' $$< \
+$(MODERN_BUILD_DIR)/$(1)-dark-$(2).css: modern/$(1)-dark.scss | $(MODERN_BUILD_DIR)
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(2)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(2)) !default;' $$< \
 	  | $$(SCSS) > $$@
 endef
 
-$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_libadwaita_to_css,$(COLOR_VARIANT))))
+define modern_libadwaita_adaptive_to_css
+$(MODERN_BUILD_DIR)/libadwaita-$(1).css: libadwaita/upstream/gtk.scss modern/libadwaita-colors-light.scss modern/libadwaita-colors-dark.scss | $(MODERN_BUILD_DIR)
+	$$(SCSS) libadwaita/upstream/gtk.scss > $$@
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' modern/libadwaita-colors-light.scss \
+	  | $$(SCSS) >> $$@
+	printf '\n@media (prefers-color-scheme: dark) {\n' >> $$@
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' modern/libadwaita-colors-dark.scss \
+	  | $$(SCSS) | sed 's/^/  /' >> $$@
+	printf '}\n' >> $$@
+endef
+
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_libadwaita_adaptive_to_css,$(COLOR_VARIANT))))
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_pair_to_css,libadwaita,$(COLOR_VARIANT))))
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_pair_to_css,gtk4-4.22,$(COLOR_VARIANT))))
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_pair_to_css,gnome-shell-50,$(COLOR_VARIANT))))
 
 clean:
 	-rm *.css
