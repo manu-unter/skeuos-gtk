@@ -14417,8 +14417,7 @@ preferencesgroup > box > scrolledwindow {
 
 .boxed-list,
 preferencesgroup > box > list {
-  border-radius: 8px;
-  overflow: hidden; }
+  border-radius: 8px; }
 
 .boxed-list-separate > row,
 .boxed-list > row,
@@ -14582,8 +14581,7 @@ scale > trough {
 
   .boxed-list,
   preferencesgroup > box > list {
-    border-radius: 8px;
-    overflow: hidden; }
+    border-radius: 8px; }
 
   .boxed-list-separate > row,
   .boxed-list > row,
