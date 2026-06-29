@@ -71,8 +71,11 @@ MODERN_GTK_LIBADWAITA_TWEAK_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 MODERN_GNOME_SHELL_50_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-light-$(COLOR).css \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-dark-$(COLOR).css)
-MODERN_DISTRIBUTION_TARGETS = $(foreach COLOR,$(MODERN_DISTRIBUTION_COLORS), \
+MODERN_GTK3_DISTRIBUTION_TARGETS = $(foreach COLOR,$(MODERN_DISTRIBUTION_COLORS), \
+	$(THEMES_DIR)Skeuos-$(COLOR)-Adaptive/gtk-3.0/gtk.css)
+MODERN_GTK4_DISTRIBUTION_TARGETS = $(foreach COLOR,$(MODERN_DISTRIBUTION_COLORS), \
 	$(THEMES_DIR)Skeuos-$(COLOR)-Adaptive/gtk-4.0/gtk.css)
+MODERN_DISTRIBUTION_TARGETS = $(MODERN_GTK3_DISTRIBUTION_TARGETS) $(MODERN_GTK4_DISTRIBUTION_TARGETS)
 
 build-modern: build-modern-libadwaita build-modern-gtk4-4.22 build-modern-gtk4-libadwaita-tweaks build-modern-gnome-shell-50
 
@@ -147,6 +150,12 @@ $(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(1).css: modern/gtk4-libadwaita-twea
 endef
 
 define modern_distribution_to_theme
+$(THEMES_DIR)Skeuos-$(1)-Adaptive/gtk-3.0/gtk.css: $(THEMES_DIR)Skeuos-$(1)-Light/gtk-3.0/gtk.css $(THEMES_DIR)Skeuos-$(1)-Light/gtk-3.0/thumbnail.png $(THEMES_DIR)Skeuos-$(1)-Dark/gtk-3.0/gtk.css $$(wildcard $(THEMES_DIR)Skeuos-$(1)-Light/gtk-3.0/assets/*) $$(wildcard $(THEMES_DIR)Skeuos-$(1)-Dark/gtk-3.0/assets/*)
+	mkdir -p $$(dir $$@)
+	cp -a $(THEMES_DIR)Skeuos-$(1)-Light/gtk-3.0/. $$(dir $$@)
+	cp $(THEMES_DIR)Skeuos-$(1)-Dark/gtk-3.0/gtk.css $$(dir $$@)gtk-dark.css
+	cp -a $(THEMES_DIR)Skeuos-$(1)-Dark/gtk-3.0/assets/. $$(dir $$@)assets/
+
 $(THEMES_DIR)Skeuos-$(1)-Adaptive/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css $(MODERN_BUILD_DIR)/libadwaita-$(1).css $(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(1).css ../assets-renderer/gtk3/assets-$(1)/check-symbolic.svg libadwaita/upstream/assets/devel-symbolic.svg
 	mkdir -p $$(dir $$@)assets
 	printf '/* GTK 4.22 adaptive base */\n' > $$@

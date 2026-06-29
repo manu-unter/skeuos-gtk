@@ -62,6 +62,7 @@ Completed in the first implementation slice:
 - GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
 - Started the Shell 50 local tweak port with a conservative first layer for OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows.
 - Added a tracked first publication path for `Skeuos-Blue-Adaptive`. `make build-modern-distribution` builds `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first, the libadwaita adaptive layer second, and the Skeuos tactile layer third. That concatenation order is the current GTK4/libadwaita layering model.
+- `Skeuos-Blue-Adaptive` is now a hybrid publication artifact. Its `gtk-3.0` directory is assembled from the classic `Skeuos-Blue-Light` and `Skeuos-Blue-Dark` GTK3 outputs, while its `gtk-4.0` directory is generated only by the modern adaptive GTK4/libadwaita pipeline.
 - Added the first real GTK4/libadwaita tactile style slice as a third adaptive layer:
   - `src/sass/modern/_gtk4-libadwaita-tweaks.scss`
   - `src/sass/modern/gtk4-libadwaita-tweaks-light.scss`
@@ -77,12 +78,17 @@ Not done yet:
 
 ## Current Modern Distribution
 
-The modern adaptive GTK4/libadwaita distribution currently ships as:
+The modern adaptive distribution currently ships as a hybrid GTK theme:
 
 - `themes/Skeuos-Blue-Adaptive/index.theme`
+- `themes/Skeuos-Blue-Adaptive/gtk-3.0/gtk.css`, copied from the classic `Skeuos-Blue-Light` GTK3 output
+- `themes/Skeuos-Blue-Adaptive/gtk-3.0/gtk-dark.css`, copied from the classic `Skeuos-Blue-Dark` GTK3 output
+- `themes/Skeuos-Blue-Adaptive/gtk-3.0/assets/`, copied from the classic GTK3 asset set
 - `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css`
 - `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk-dark.css`, symlinked to `gtk.css`
 - `themes/Skeuos-Blue-Adaptive/gtk-4.0/assets/`
+
+This makes `Skeuos-Blue-Adaptive` directly installable/selectable by consumers. GTK3 apps load the polished classic GTK3 styles from `gtk-3.0`; GTK4/libadwaita apps load the modern adaptive stylesheet from `gtk-4.0`. Do not copy legacy classic `gtk-4.0` files into the adaptive family.
 
 The distribution `gtk.css` layering is literal file order:
 
