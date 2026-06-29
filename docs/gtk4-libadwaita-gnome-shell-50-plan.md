@@ -61,13 +61,19 @@ Completed in the first implementation slice:
 - Converted the GTK 4.22 modern build target to emit one adaptive `gtk4-4.22-$COLOR.css` artifact per accent. The split GTK 4.22 outputs are now behind `build-modern-gtk4-4.22-split` and should be treated as compile probes.
 - GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
 - Started the Shell 50 local tweak port with a conservative first layer for OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows.
-- Added a tracked first publication path for `Skeuos-Blue-Adaptive`. `make build-modern-distribution` builds `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first and the libadwaita adaptive layer second. That concatenation order is the current GTK4/libadwaita layering model.
+- Added a tracked first publication path for `Skeuos-Blue-Adaptive`. `make build-modern-distribution` builds `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first, the libadwaita adaptive layer second, and the Skeuos tactile layer third. That concatenation order is the current GTK4/libadwaita layering model.
+- Added the first real GTK4/libadwaita tactile style slice as a third adaptive layer:
+  - `src/sass/modern/_gtk4-libadwaita-tweaks.scss`
+  - `src/sass/modern/gtk4-libadwaita-tweaks-light.scss`
+  - `src/sass/modern/gtk4-libadwaita-tweaks-dark.scss`
+  - `src/sass/modern/build/gtk4-libadwaita-tweaks-$COLOR.css`, ignored probe output
+- The first tactile slice covers modern surfaces and core controls: window/view background, CSD depth, headerbar/searchbar treatment, sidebars, cards/boxed lists/preferences lists, popovers, dialogs, buttons, entries, selected/hover rows, checks/radios, switches, and scales.
 
 Not done yet:
 
 - Only `Skeuos-Blue-Adaptive` is generated for the modern adaptive publication path. The older `Skeuos-$COLOR-Light/Dark` distribution files are intentionally untouched.
 - Shell 50 local tweaks are only partially ported. Asset-backed checkboxes/toggles, window close image assets, search/dash/app-grid styling, full-panel variants, and login/lock background styling still need selector and asset validation.
-- GTK 4.22 local tweaks have not been ported.
+- Full GTK4/libadwaita visual coverage has not been ported. The first tactile slice is intentionally conservative and does not yet cover tab/view switcher polish, text selection handles, app-specific Nautilus/Text Editor/Console details, window control image assets, or screenshot-based regression validation.
 
 ## Current Modern Distribution
 
@@ -82,8 +88,9 @@ The distribution `gtk.css` layering is literal file order:
 
 1. `src/sass/modern/build/gtk4-4.22-Blue.css`
 2. `src/sass/modern/build/libadwaita-Blue.css`
+3. `src/sass/modern/build/gtk4-libadwaita-tweaks-Blue.css`
 
-That means the GTK 4.22 adaptive base establishes the broad GTK selector baseline, then the libadwaita adaptive layer wins for public variables and libadwaita-specific class/widget treatment. Keep that order unless a concrete regression shows a better layering boundary.
+That means the GTK 4.22 adaptive base establishes the broad GTK selector baseline, the libadwaita adaptive layer wins for public variables and libadwaita-specific class/widget treatment, and the Skeuos tactile layer wins for intentional visual reinterpretation. Keep that order unless a concrete regression shows a better layering boundary.
 
 ## Current Shell 50 Publication Status
 
@@ -296,6 +303,20 @@ Port in this order because each layer gives context to the next:
 5. Window chrome and app polish: window controls, app-specific CSS only where public variables/classes do not reach.
 6. Shell 50 surfaces: panel, quick settings, overview, dash, app grid, search, notifications, lock/login, screenshot, OSD, and window picker as Shell-specific work.
 
+### First GTK4/libadwaita Style Slice
+
+The first committed style slice is a post-libadwaita adaptive layer, not a fork of libadwaita upstream. This keeps the upstream import readable and makes the Skeuos reinterpretation explicit.
+
+| Intent | Decision | Current Implementation | Still Needs Validation |
+| --- | --- | --- | --- |
+| Surface hierarchy | Adopt/reinterpret | Use modern tokens for window, view, headerbar, sidebar, card, dialog, and popover surfaces; add Skeuos depth through borders, gradients, and shadows. | Confirm contrast in `adwaita-1-demo`, Settings, Files, Text Editor, and Console. |
+| Headerbars/toolbars | Reinterpret | Treat headerbar/searchbar as toolbar surfaces with subtle vertical depth and bottom separation. | Verify split headerbars, toolbar views, and backdrop transitions. |
+| Cards and boxed lists | Reinterpret | Style `.card`, `.boxed-list`, `.boxed-list-separate`, and preferences lists as tactile grouped surfaces. | Check preferences pages and boxed list row clipping/radius behavior. |
+| Buttons and entries | Adopt/reinterpret | Add raised/inset Skeuos treatment to standard buttons and entries while leaving documented action classes in place. | Verify linked controls, split buttons, toolbar image buttons, and disabled states. |
+| Rows and selection | Adopt | Add hover/active/selected depth without replacing libadwaita list structure. | Check listview/gridview/columnview and navigation-sidebar selected states. |
+| Checks, radios, switches, scales | Adopt | Add light tactile depth to existing modern control nodes and keep libadwaita assets/icons. | Verify check/radio glyph colors, switch rows, and scale marks. |
+| App-specific details | Defer | No private Nautilus/Text Editor/Console CSS in this slice. | Add only after public variables/classes prove insufficient. |
+
 ## Visual Intent Mapping
 
 The table maps visual intent rather than old selectors. This is the unit of work for the port.
@@ -375,8 +396,8 @@ Minimum checks per target:
 
 ## Next Concrete Slices
 
-1. Expand the modern GTK4/libadwaita Sass with a first real visual slice: surfaces, cards/boxed lists, headerbars/toolbars, buttons, entries, popovers, and focus/selection.
-2. For that slice, update the visual intent table with adopt/reinterpret/drop/redesign decisions and validation fixtures.
-3. Regenerate `themes/Skeuos-Blue-Adaptive` and keep the tracked distribution output reviewable for Nix flake pinning.
+1. Run visual validation for the first GTK4/libadwaita tactile slice in `gtk4-widget-factory`, `adwaita-1-demo`, Files, Settings, Text Editor, Console, and one OSD-heavy app.
+2. Tighten the first slice from that feedback, especially linked controls, toolbar image buttons, preferences rows, selected rows, check/radio glyph colors, and scale marks.
+3. Add the next modern style slice for tab/view switchers, notebooks, text selection handles, window controls, scrollbars, progress/level bars, tooltips, and app notifications.
 4. Start Shell 50 publication only after choosing the Shell distribution naming and deciding whether Shell 50 needs split light/dark theme directories.
 5. Add a validation script or documented command sequence for widget factory/demo screenshots and Shell smoke checks.

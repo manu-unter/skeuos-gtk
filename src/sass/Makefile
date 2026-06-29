@@ -4,7 +4,7 @@ THEMES_DIR=../../themes/
 MODERN_BUILD_DIR=modern/build
 MODERN_DISTRIBUTION_COLORS ?= Blue
 
-.PHONY: build build-modern build-modern-distribution build-modern-libadwaita build-modern-libadwaita-split build-modern-gtk4-4.22 build-modern-gtk4-4.22-split build-modern-gnome-shell-50 clean clean-modern
+.PHONY: build build-modern build-modern-distribution build-modern-libadwaita build-modern-libadwaita-split build-modern-gtk4-4.22 build-modern-gtk4-4.22-split build-modern-gtk4-libadwaita-tweaks build-modern-gnome-shell-50 clean clean-modern
 
 build: clean
 	$(MAKE) $(TARGETS)
@@ -66,13 +66,15 @@ MODERN_GTK422_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 MODERN_GTK422_SPLIT_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 	$(MODERN_BUILD_DIR)/gtk4-4.22-light-$(COLOR).css \
 	$(MODERN_BUILD_DIR)/gtk4-4.22-dark-$(COLOR).css)
+MODERN_GTK_LIBADWAITA_TWEAK_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
+	$(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(COLOR).css)
 MODERN_GNOME_SHELL_50_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-light-$(COLOR).css \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-dark-$(COLOR).css)
 MODERN_DISTRIBUTION_TARGETS = $(foreach COLOR,$(MODERN_DISTRIBUTION_COLORS), \
 	$(THEMES_DIR)Skeuos-$(COLOR)-Adaptive/gtk-4.0/gtk.css)
 
-build-modern: build-modern-libadwaita build-modern-gtk4-4.22 build-modern-gnome-shell-50
+build-modern: build-modern-libadwaita build-modern-gtk4-4.22 build-modern-gtk4-libadwaita-tweaks build-modern-gnome-shell-50
 
 build-modern-distribution: $(MODERN_DISTRIBUTION_TARGETS)
 
@@ -84,12 +86,15 @@ build-modern-gtk4-4.22: $(MODERN_GTK422_TARGETS)
 
 build-modern-gtk4-4.22-split: $(MODERN_GTK422_SPLIT_TARGETS)
 
+build-modern-gtk4-libadwaita-tweaks: $(MODERN_GTK_LIBADWAITA_TWEAK_TARGETS)
+
 build-modern-gnome-shell-50: $(MODERN_GNOME_SHELL_50_TARGETS)
 
 $(MODERN_BUILD_DIR):
 	mkdir -p $@
 
 $(MODERN_GTK422_TARGETS) $(MODERN_GTK422_SPLIT_TARGETS): modern/_gtk4-4.22-body.scss
+$(MODERN_GTK_LIBADWAITA_TWEAK_TARGETS): modern/_gtk4-libadwaita-tweaks.scss modern/_tokens.scss
 $(MODERN_GNOME_SHELL_50_TARGETS): gnome-shell-50/_colors.scss gnome-shell-50/_common-tweaks.scss
 
 define modern_pair_to_css
@@ -129,13 +134,27 @@ $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css: modern/gtk4-4.22-light.scss modern/gtk4-
 	printf '}\n' >> $$@
 endef
 
+define modern_gtk_libadwaita_tweaks_adaptive_to_css
+$(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(1).css: modern/gtk4-libadwaita-tweaks-light.scss modern/gtk4-libadwaita-tweaks-dark.scss modern/_gtk4-libadwaita-tweaks.scss | $(MODERN_BUILD_DIR)
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' modern/gtk4-libadwaita-tweaks-light.scss \
+	  | $$(SCSS) > $$@
+	printf '\n@media (prefers-color-scheme: dark) {\n' >> $$@
+	sed -e '/selected_bg_color: #.*!default;/c $$$$selected_bg_color: $$(COLOR_$(1)) !default;' \
+	    -e '/selected_fg_color: #.*!default;/c $$$$selected_fg_color: $$(TEXT_COLOR_$(1)) !default;' modern/gtk4-libadwaita-tweaks-dark.scss \
+	  | $$(SCSS) | sed 's/^/  /' >> $$@
+	printf '}\n' >> $$@
+endef
+
 define modern_distribution_to_theme
-$(THEMES_DIR)Skeuos-$(1)-Adaptive/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css $(MODERN_BUILD_DIR)/libadwaita-$(1).css ../assets-renderer/gtk3/assets-$(1)/check-symbolic.svg libadwaita/upstream/assets/devel-symbolic.svg
+$(THEMES_DIR)Skeuos-$(1)-Adaptive/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css $(MODERN_BUILD_DIR)/libadwaita-$(1).css $(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(1).css ../assets-renderer/gtk3/assets-$(1)/check-symbolic.svg libadwaita/upstream/assets/devel-symbolic.svg
 	mkdir -p $$(dir $$@)assets
 	printf '/* GTK 4.22 adaptive base */\n' > $$@
 	cat $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css >> $$@
 	printf '\n/* libadwaita adaptive layer */\n' >> $$@
 	cat $(MODERN_BUILD_DIR)/libadwaita-$(1).css >> $$@
+	printf '\n/* Skeuos GTK4/libadwaita adaptive tactile layer */\n' >> $$@
+	cat $(MODERN_BUILD_DIR)/gtk4-libadwaita-tweaks-$(1).css >> $$@
 	sed -i 's/[[:space:]]*$$$$//' $$@
 	cp ../assets-renderer/gtk3/assets-$(1)/* $$(dir $$@)assets/
 	cp libadwaita/upstream/assets/*.svg $$(dir $$@)assets/
@@ -145,6 +164,7 @@ endef
 
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_libadwaita_adaptive_to_css,$(COLOR_VARIANT))))
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_gtk422_adaptive_to_css,$(COLOR_VARIANT))))
+$(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_gtk_libadwaita_tweaks_adaptive_to_css,$(COLOR_VARIANT))))
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_distribution_to_theme,$(COLOR_VARIANT))))
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_pair_to_css,libadwaita,$(COLOR_VARIANT))))
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_pair_to_css,gtk4-4.22,$(COLOR_VARIANT))))
