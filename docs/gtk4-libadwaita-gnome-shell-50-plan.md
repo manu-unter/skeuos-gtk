@@ -60,11 +60,12 @@ Completed in the first implementation slice:
 - Direction correction: GTK4/libadwaita modern output should be adaptive through `@media (prefers-color-scheme: dark)`, not split-only. Existing split prototype files are transitional unless converted into compatibility outputs.
 - Converted the GTK 4.22 modern build target to emit one adaptive `gtk4-4.22-$COLOR.css` artifact per accent. The split GTK 4.22 outputs are now behind `build-modern-gtk4-4.22-split` and should be treated as compile probes.
 - GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
+- Started the Shell 50 local tweak port with a conservative first layer for OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows.
 
 Not done yet:
 
 - No files in `themes/` have been regenerated for this work.
-- Shell 50 local tweaks are only a placeholder; existing Shell 42 tweaks have not been ported.
+- Shell 50 local tweaks are only partially ported. Asset-backed checkboxes/toggles, window close image assets, search/dash/app-grid styling, full-panel variants, and login/lock background styling still need selector and asset validation.
 - GTK 4.22 local tweaks have not been ported.
 
 ## Current Repository Inventory

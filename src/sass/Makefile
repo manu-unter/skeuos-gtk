@@ -85,6 +85,7 @@ $(MODERN_BUILD_DIR):
 	mkdir -p $@
 
 $(MODERN_GTK422_TARGETS) $(MODERN_GTK422_SPLIT_TARGETS): modern/_gtk4-4.22-body.scss
+$(MODERN_GNOME_SHELL_50_TARGETS): gnome-shell-50/_colors.scss gnome-shell-50/_common-tweaks.scss
 
 define modern_pair_to_css
 $(MODERN_BUILD_DIR)/$(1)-light-$(2).css: modern/$(1)-light.scss | $(MODERN_BUILD_DIR)
