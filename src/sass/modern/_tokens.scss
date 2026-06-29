@@ -1,0 +1,64 @@
+// Shared visual tokens for the modern GTK4/libadwaita/GNOME Shell targets.
+//
+// Import this after common/_colors.scss so the legacy Skeuos palette remains
+// the single source for light/dark surfaces and accent variants.
+
+$modern_window_bg_color: $bg_color !default;
+$modern_window_fg_color: $fg_color !default;
+
+$modern_view_bg_color: $base_color !default;
+$modern_view_fg_color: $text_color !default;
+
+$modern_headerbar_bg_color: $headerbar_bg_color !default;
+$modern_headerbar_fg_color: $fg_color !default;
+$modern_headerbar_border_color: $fg_color !default;
+$modern_headerbar_backdrop_color: $backdrop_bg_color !default;
+$modern_headerbar_shade_color: transparentize(black, if($variant == 'light', 0.88, 0.64)) !default;
+$modern_headerbar_darker_shade_color: transparentize(black, if($variant == 'light', 0.88, 0.1)) !default;
+
+$modern_sidebar_bg_color: $sidebar_bg_color !default;
+$modern_sidebar_fg_color: $fg_color !default;
+$modern_sidebar_backdrop_color: $backdrop_sidebar_bg_color !default;
+$modern_sidebar_border_color: transparentize(black, if($variant == 'light', 0.93, 0.64)) !default;
+$modern_sidebar_shade_color: transparentize(black, if($variant == 'light', 0.93, 0.75)) !default;
+
+$modern_secondary_sidebar_bg_color: mix($sidebar_bg_color, $bg_color, 55%) !default;
+$modern_secondary_sidebar_fg_color: $fg_color !default;
+$modern_secondary_sidebar_backdrop_color: mix($backdrop_sidebar_bg_color, $backdrop_bg_color, 55%) !default;
+$modern_secondary_sidebar_border_color: $modern_sidebar_border_color !default;
+$modern_secondary_sidebar_shade_color: $modern_sidebar_shade_color !default;
+
+$modern_card_bg_color: if($variant == 'light', $base_color, mix($base_color, $fg_color, 92%)) !default;
+$modern_card_fg_color: $fg_color !default;
+$modern_card_shade_color: transparentize(black, if($variant == 'light', 0.93, 0.64)) !default;
+
+$modern_dialog_bg_color: if($variant == 'light', $bg_color, mix($bg_color, $base_color, 45%)) !default;
+$modern_dialog_fg_color: $fg_color !default;
+
+$modern_popover_bg_color: $popover_bg_color !default;
+$modern_popover_fg_color: $fg_color !default;
+$modern_popover_shade_color: transparentize(black, if($variant == 'light', 0.93, 0.75)) !default;
+
+$modern_thumbnail_bg_color: if($variant == 'light', $base_color, mix($base_color, $fg_color, 88%)) !default;
+$modern_thumbnail_fg_color: $fg_color !default;
+
+$modern_shade_color: transparentize(black, if($variant == 'light', 0.93, 0.75)) !default;
+$modern_scrollbar_outline_color: if($variant == 'light', white, transparentize(black, 0.05)) !default;
+
+$modern_accent_bg_color: $selected_bg_color !default;
+$modern_accent_fg_color: $selected_fg_color !default;
+
+$modern_destructive_bg_color: $destructive_color !default;
+$modern_destructive_fg_color: white !default;
+$modern_success_bg_color: $success_color !default;
+$modern_success_fg_color: white !default;
+$modern_warning_bg_color: $warning_color !default;
+$modern_warning_fg_color: if(lightness($warning_color) > 55%, transparentize(black, 0.2), white) !default;
+$modern_error_bg_color: $error_color !default;
+$modern_error_fg_color: white !default;
+
+$modern_active_toggle_bg_color: if($variant == 'light', white, transparentize(white, 0.8)) !default;
+$modern_active_toggle_fg_color: if($variant == 'light', transparentize(black, 0.2), white) !default;
+$modern_overview_bg_color: if($variant == 'light', mix($bg_color, $base_color, 45%), mix($bg_color, $base_color, 70%)) !default;
+$modern_overview_fg_color: $fg_color !default;
+
