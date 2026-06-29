@@ -1,11 +1,11 @@
 [Desktop Entry]
 Type=X-GNOME-Metatheme
-Name=Skeuos-Adaptive-Blue
-Comment=Skeuos Adaptive Blue theme
+Name=Skeuos-Blue-Adaptive
+Comment=Skeuos Blue Adaptive theme
 Encoding=UTF-8
 
 [X-GNOME-Metatheme]
-GtkTheme=Skeuos-Adaptive-Blue
+GtkTheme=Skeuos-Blue-Adaptive
 MetacityTheme=Adwaita
 IconTheme=Adwaita
 CursorTheme=Adwaita

@@ -70,7 +70,7 @@ MODERN_GNOME_SHELL_50_TARGETS = $(foreach COLOR,$(COLOR_VARIANTS), \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-light-$(COLOR).css \
 	$(MODERN_BUILD_DIR)/gnome-shell-50-dark-$(COLOR).css)
 MODERN_DISTRIBUTION_TARGETS = $(foreach COLOR,$(MODERN_DISTRIBUTION_COLORS), \
-	$(THEMES_DIR)Skeuos-Adaptive-$(COLOR)/gtk-4.0/gtk.css)
+	$(THEMES_DIR)Skeuos-$(COLOR)-Adaptive/gtk-4.0/gtk.css)
 
 build-modern: build-modern-libadwaita build-modern-gtk4-4.22 build-modern-gnome-shell-50
 
@@ -130,7 +130,7 @@ $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css: modern/gtk4-4.22-light.scss modern/gtk4-
 endef
 
 define modern_distribution_to_theme
-$(THEMES_DIR)Skeuos-Adaptive-$(1)/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css $(MODERN_BUILD_DIR)/libadwaita-$(1).css ../assets-renderer/gtk3/assets-$(1)/check-symbolic.svg libadwaita/upstream/assets/devel-symbolic.svg
+$(THEMES_DIR)Skeuos-$(1)-Adaptive/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css $(MODERN_BUILD_DIR)/libadwaita-$(1).css ../assets-renderer/gtk3/assets-$(1)/check-symbolic.svg libadwaita/upstream/assets/devel-symbolic.svg
 	mkdir -p $$(dir $$@)assets
 	printf '/* GTK 4.22 adaptive base */\n' > $$@
 	cat $(MODERN_BUILD_DIR)/gtk4-4.22-$(1).css >> $$@
@@ -140,7 +140,7 @@ $(THEMES_DIR)Skeuos-Adaptive-$(1)/gtk-4.0/gtk.css: $(MODERN_BUILD_DIR)/gtk4-4.22
 	cp ../assets-renderer/gtk3/assets-$(1)/* $$(dir $$@)assets/
 	cp libadwaita/upstream/assets/*.svg $$(dir $$@)assets/
 	ln -sf gtk.css $$(dir $$@)gtk-dark.css
-	printf '[Desktop Entry]\nType=X-GNOME-Metatheme\nName=Skeuos-Adaptive-$(1)\nComment=Skeuos Adaptive $(1) theme\nEncoding=UTF-8\n\n[X-GNOME-Metatheme]\nGtkTheme=Skeuos-Adaptive-$(1)\nMetacityTheme=Adwaita\nIconTheme=Adwaita\nCursorTheme=Adwaita\nButtonLayout=:minimize,maximize,close\n' > $(THEMES_DIR)Skeuos-Adaptive-$(1)/index.theme
+	printf '[Desktop Entry]\nType=X-GNOME-Metatheme\nName=Skeuos-$(1)-Adaptive\nComment=Skeuos $(1) Adaptive theme\nEncoding=UTF-8\n\n[X-GNOME-Metatheme]\nGtkTheme=Skeuos-$(1)-Adaptive\nMetacityTheme=Adwaita\nIconTheme=Adwaita\nCursorTheme=Adwaita\nButtonLayout=:minimize,maximize,close\n' > $(THEMES_DIR)Skeuos-$(1)-Adaptive/index.theme
 endef
 
 $(foreach COLOR_VARIANT,$(COLOR_VARIANTS),$(eval $(call modern_libadwaita_adaptive_to_css,$(COLOR_VARIANT))))

@@ -61,13 +61,49 @@ Completed in the first implementation slice:
 - Converted the GTK 4.22 modern build target to emit one adaptive `gtk4-4.22-$COLOR.css` artifact per accent. The split GTK 4.22 outputs are now behind `build-modern-gtk4-4.22-split` and should be treated as compile probes.
 - GTK 4.22 upstream Sass compiles many colors directly into selectors, so the initial adaptive GTK artifact emits the full light selector set at top level and the full dark selector set inside `@media (prefers-color-scheme: dark)`. This is a single-source adaptive output, not a legacy split distribution model. A later cleanup can reduce duplication by moving more values to GTK-supported named colors or CSS variables where practical.
 - Started the Shell 50 local tweak port with a conservative first layer for OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows.
-- Added a tracked first publication path for `Skeuos-Adaptive-Blue`. `make build-modern-distribution` builds `themes/Skeuos-Adaptive-Blue/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first and the libadwaita adaptive layer second. That concatenation order is the current GTK4/libadwaita layering model.
+- Added a tracked first publication path for `Skeuos-Blue-Adaptive`. `make build-modern-distribution` builds `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css` by concatenating the GTK 4.22 adaptive base first and the libadwaita adaptive layer second. That concatenation order is the current GTK4/libadwaita layering model.
 
 Not done yet:
 
-- Only `Skeuos-Adaptive-Blue` is generated for the modern adaptive publication path. The older `Skeuos-$COLOR-Light/Dark` distribution files are intentionally untouched.
+- Only `Skeuos-Blue-Adaptive` is generated for the modern adaptive publication path. The older `Skeuos-$COLOR-Light/Dark` distribution files are intentionally untouched.
 - Shell 50 local tweaks are only partially ported. Asset-backed checkboxes/toggles, window close image assets, search/dash/app-grid styling, full-panel variants, and login/lock background styling still need selector and asset validation.
 - GTK 4.22 local tweaks have not been ported.
+
+## Current Modern Distribution
+
+The modern adaptive GTK4/libadwaita distribution currently ships as:
+
+- `themes/Skeuos-Blue-Adaptive/index.theme`
+- `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk.css`
+- `themes/Skeuos-Blue-Adaptive/gtk-4.0/gtk-dark.css`, symlinked to `gtk.css`
+- `themes/Skeuos-Blue-Adaptive/gtk-4.0/assets/`
+
+The distribution `gtk.css` layering is literal file order:
+
+1. `src/sass/modern/build/gtk4-4.22-Blue.css`
+2. `src/sass/modern/build/libadwaita-Blue.css`
+
+That means the GTK 4.22 adaptive base establishes the broad GTK selector baseline, then the libadwaita adaptive layer wins for public variables and libadwaita-specific class/widget treatment. Keep that order unless a concrete regression shows a better layering boundary.
+
+## Current Shell 50 Publication Status
+
+No Shell 50 theme is shipped in tracked `themes/` output yet. There are currently no `themes/Skeuos-*-GNOME_50*` directories.
+
+What exists today:
+
+- `src/sass/modern/gnome-shell-50-light.scss`
+- `src/sass/modern/gnome-shell-50-dark.scss`
+- `src/sass/gnome-shell-50/_colors.scss`
+- `src/sass/gnome-shell-50/_common-tweaks.scss`
+- `src/sass/gnome-shell-50/upstream/`, synced from Shell `50.2`
+- `make -C src/sass build-modern-gnome-shell-50`
+
+The build target emits ignored probe CSS only:
+
+- `src/sass/modern/build/gnome-shell-50-light-$COLOR.css`
+- `src/sass/modern/build/gnome-shell-50-dark-$COLOR.css`
+
+The current Shell 50 tweak layer is source-committed but conservative. It covers OSD depth, sliders, popovers, message list typography, notification shadows, window captions, workspace switcher dots, screenshot shot/cast buttons, and panel icon/text shadows. It does not yet publish a Shell 50 distribution for user installation or Nix flake pinning.
 
 ## Current Repository Inventory
 
@@ -180,8 +216,11 @@ Use these references when updating the mapping:
 
 - GTK CSS overview: `https://docs.gtk.org/gtk4/css-overview.html`
 - GTK widget pages: each widget class page has a "CSS nodes" section, for example `GtkButton`.
+- GTK running/debugging docs and Inspector: `https://docs.gtk.org/gtk4/running.html`
 - libadwaita CSS variables: `https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/css-variables.html`
 - libadwaita style classes: `https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/style-classes.html`
+- libadwaita style manager: `https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/class.StyleManager.html`
+- GNOME HIG UI styling: `https://developer.gnome.org/hig/guidelines/ui-styling.html`
 - GTK upstream stylesheet: `https://gitlab.gnome.org/GNOME/gtk/-/tree/main/gtk/theme/Default`
 - libadwaita upstream stylesheet: `https://gitlab.gnome.org/GNOME/libadwaita/-/tree/main/src/stylesheet`
 - GNOME Shell upstream Sass: `https://gitlab.gnome.org/GNOME/gnome-shell/-/tree/main/data/theme/gnome-shell-sass`
@@ -195,6 +234,67 @@ Observed on 2026-06-29:
 - GNOME Shell target: use Shell `50.2` as the Shell 50 baseline.
 
 The sync scaffolds added for this plan default to those versions but allow `VERSION=...` overrides.
+
+## GTK3 to GTK4/libadwaita Design Translation Method
+
+The porting rule is: translate visual intent first, selectors second. GTK3 Skeuos is useful because it shows the desired tactile language, but GTK4/libadwaita and Shell 50 have different widget contracts, different public customization points, and different expectations around adaptive color.
+
+For every migrated style, record the answer to these questions:
+
+- What visual job did the GTK3 style perform: surface hierarchy, tactile affordance, selection/focus feedback, overlay separation, compact density, app-specific repair, or branding?
+- Which GTK3 mechanism delivered that job: Sass token, placeholder mixin, public node selector, private widget internals, image asset, or app-specific CSS?
+- What is the modern public target: GTK4 CSS node, libadwaita CSS variable, libadwaita documented style class, libadwaita widget class, or Shell St selector?
+- What is the decision: adopt, reinterpret, drop, or redesign?
+- What fixture proves it: widget factory, adwaita demo, a real app, or Shell surface?
+
+Use these decision meanings consistently:
+
+| Decision | Meaning | Typical Examples |
+| --- | --- | --- |
+| Adopt | The concept and selector contract still match closely. | Basic button states, entries, scrollbars, scales after node validation. |
+| Reinterpret | The visual intent remains, but the modern widget model changed. | Headerbars/toolbars, sidebars, cards/boxed lists, list rows, tab/navigation widgets. |
+| Drop | The old style fixed an obsolete widget, app bug, or removed node. | Dead GTK3 selectors, old libhandy-only selectors, removed Shell 42 widgets. |
+| Redesign | The old style has no good modern equivalent or conflicts with libadwaita behavior. | Heavy app-specific overrides, private libadwaita internals, Shell overview/dash/app-grid polish. |
+
+### Commonalities And Differences
+
+| Area | GTK3 Skeuos Assumption | GTK4/libadwaita/Shell 50 Treatment |
+| --- | --- | --- |
+| CSS target | A theme can often style broad GTK nodes and many stable-looking descendants. | GTK4 still uses CSS nodes, but each widget's documented node tree must be checked before porting old selectors. |
+| Color model | Sass variables compile into split light and dark CSS. | Modern GTK4/libadwaita output stays one adaptive stylesheet: light defaults plus dark `@media (prefers-color-scheme: dark)`. |
+| Public surface colors | GTK3 relies mostly on Sass token relationships. | libadwaita exposes explicit UI variables such as window, view, headerbar, sidebar, card, dialog, popover, thumbnail, accent, semantic, and shade colors. Prefer these first. |
+| Widget variants | Skeuos often styles widget descendants directly. | Prefer libadwaita documented style classes such as `.suggested-action`, `.destructive-action`, `.flat`, `.raised`, `.circular`, `.pill`, `.linked`, `.toolbar`, boxed-list/card classes, navigation/sidebar classes, and OSD classes. |
+| Headerbar model | Headerbar/titlebar is mainly a themed window chrome surface. | Headerbars sit in a broader toolbar/navigation model. Treat headerbar polish as surface hierarchy plus toolbar button behavior, not only titlebar gradients. |
+| Lists and content | Tree/list/view selectors carry much of the content polish. | GTK4 adds `GtkListView`, `GtkGridView`, and `GtkColumnView`; libadwaita apps heavily use boxed lists, preferences rows, navigation split views, and cards. |
+| App CSS | App-specific overlays were normal repair points for Nautilus/gedit. | Minimize app CSS. First try public variables/classes so modern Files, Settings, Text Editor, Console, Loupe, and similar apps inherit correctly. |
+| Skeuomorphic depth | Depth comes from gradients, shadows, borders, and image assets. | Keep depth focused on interaction semantics: raised/pressed/inset controls, separated overlays, tactile cards, and readable sidebars. Avoid fighting adaptive layout or high contrast behavior. |
+| Assets | GTK3/Shell assets can encode check/radio/switch/window-button styling. | Reuse assets only after validating the modern node or Shell St resource path. Symbolic libadwaita assets may be needed, but stale asset selectors should be dropped. |
+| Shell | Older Shell targets can reuse many names across versions. | Shell 50 is a separate St stylesheet with its own Sass imports and widget files. Share tokens and intent, not GTK selectors. |
+
+### Translation Workflow
+
+1. Inventory one visual intent slice in GTK3 and current GTK4, using `src/sass/gtk3/_common-tweaks.scss`, `src/sass/gtk4/_common-tweaks.scss`, app overlays, and generated CSS as references.
+2. Inspect the modern upstream target: GTK 4.22 widget docs/Inspector for CSS nodes, libadwaita variable/style-class docs for public contracts, or Shell 50 Sass widgets for St selectors.
+3. Classify each old style as adopt, reinterpret, drop, or redesign before writing Sass.
+4. Implement through the narrowest stable hook:
+   - libadwaita public variables first;
+   - documented libadwaita style classes second;
+   - GTK4 documented CSS nodes third;
+   - upstream Sass placeholders/mixins if they are already part of the synced source;
+   - private libadwaita internals only with a comment and validation target.
+5. Preserve the adaptive architecture: top-level light values, dark values inside `@media (prefers-color-scheme: dark)`, and one `gtk.css`/`gtk-dark.css` symlink pair for the adaptive distribution.
+6. Validate visually before broadening the slice. Minimum fixtures are `gtk4-widget-factory`, `adwaita-1-demo`, Nautilus, Settings, Text Editor, Console, and at least one OSD-heavy app.
+
+### Reinterpretation Priorities
+
+Port in this order because each layer gives context to the next:
+
+1. Surface hierarchy: window, view, headerbar, sidebar, secondary sidebar, card, dialog, popover, and OSD variables.
+2. Tactile controls: buttons, linked controls, entries, switches, check/radio controls, scales, progress/level bars, scrollbars.
+3. Structural widgets: boxed lists, preference rows, list/grid/column views, navigation sidebars, tab/view switchers.
+4. Overlays and feedback: popovers, toasts, app notifications, tooltips, dialogs, OSD controls.
+5. Window chrome and app polish: window controls, app-specific CSS only where public variables/classes do not reach.
+6. Shell 50 surfaces: panel, quick settings, overview, dash, app grid, search, notifications, lock/login, screenshot, OSD, and window picker as Shell-specific work.
 
 ## Visual Intent Mapping
 
@@ -275,10 +375,8 @@ Minimum checks per target:
 
 ## Next Concrete Slices
 
-1. Run the new sync scripts and review fetched upstream sources.
-2. Add `src/sass/modern/_tokens.scss` or equivalent to bridge Skeuos colors into modern GTK/libadwaita/Shell variables.
-3. Create a first libadwaita variable override file and compile it standalone.
-4. Port the existing GTK4 button/entry/headerbar/card visual intent into modern partials.
-5. Create Shell 50 entry points and import Shell 50 upstream plus a minimal `_common-tweaks.scss`.
-6. Add make targets for modern outputs, still disabled from default distribution copy.
-7. Add a validation script or documented command sequence for widget factory/demo screenshots.
+1. Expand the modern GTK4/libadwaita Sass with a first real visual slice: surfaces, cards/boxed lists, headerbars/toolbars, buttons, entries, popovers, and focus/selection.
+2. For that slice, update the visual intent table with adopt/reinterpret/drop/redesign decisions and validation fixtures.
+3. Regenerate `themes/Skeuos-Blue-Adaptive` and keep the tracked distribution output reviewable for Nix flake pinning.
+4. Start Shell 50 publication only after choosing the Shell distribution naming and deciding whether Shell 50 needs split light/dark theme directories.
+5. Add a validation script or documented command sequence for widget factory/demo screenshots and Shell smoke checks.
